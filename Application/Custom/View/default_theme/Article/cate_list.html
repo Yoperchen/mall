@@ -1,0 +1,87 @@
+<include file="Public/head" />
+<body>
+  <div class="panel admin-panel">
+    <div class="panel-head"><strong class="icon-reorder"> {:L("shangpinfenlei")}</strong></div>
+    <div class="padding border-bottom">
+      <a class="button border-main icon-plus-square-o" href="{:U('Article/cate_edit')}"> {:L("tianjia")}</a>
+    </div>
+    <table class="table table-hover text-center">
+      <tr>
+        <th width="10%">{:L("paixu")}</th>
+        <th width="20%">{:L("fenleibiaoti")}</th>
+        <th width="20%">{:L("thumb")}</th>
+        <th width="10%">{:L("xianshi")}</th>
+        <th width="10%">{:L("caozuo")}</th>
+      </tr>
+      <foreach name="cate_list_result.data.list" item="v">
+        <tr class="o{$v['goods_cate_id']}">
+          <td>{$v['sort']}</td>
+          <td>{$v['name']}</td>
+          <td><img height="80" src="/{$v['thumb']}"></td>
+          <td>
+            <span class="sp01" onclick="is_show({$v['id']},this)">
+              <if condition="$v['status'] == 1">
+                <img src="__PUBLIC__/web/images/yes.png" width="18px;" >
+                <else />
+                <img src="__PUBLIC__/web/images/no.png" width="18px;" >
+              </if>
+            </span>
+          </td>
+          <td>
+            <div class="button-group">
+              <a class="button border-main" href="{:U('Article/cate_edit',array('id'=>$v['id']))}"><span class="icon-edit"></span> {:L("bianji")}</a>
+              <a class="button border-red" href="javascript:void(0)" onclick="return del({$v['id']})"><span class="icon-trash-o"></span> {:L("shanchu")}</a>
+            </div>
+          </td>
+        </tr>
+        <if condition="$v['children']">
+          <foreach name="v['children']" item="v2">
+            <tr style="background: #f0f0f0" class="o{$v2['id']} p{$v2['p_id']}">
+              <td>{$v2['sort']}</td>
+              <td>{$v['name']} --- {$v2['name']}</td>
+              <td>
+                <span class="sp01" onclick="is_status({$v2['id']},this)">
+                  <if condition="$v2['status'] == 1">
+                    <img src="__PUBLIC__/web/images/yes.png" width="18px;" >
+                    <else />
+                    <img src="__PUBLIC__/web/images/no.png" width="18px;" >
+                  </if>
+                </span>
+              </td>
+              <td>
+                <div class="button-group">
+                  <a class="button border-main" href="{:U('Article/cate_edit',array('id'=>$v2['status']))}"><span class="icon-edit"></span> {:L("bianji")}</a>
+                  <a class="button border-red" href="javascript:void(0)" onclick="return del({$v2['id']})"><span class="icon-trash-o"></span> {:L("shanchu")}</a>
+                </div>
+              </td>
+            </tr>
+          </foreach>
+        </if>
+      </foreach>
+    </table>
+  </div>
+  <script type="text/javascript">
+    function del(id){
+      if(confirm("{:L('shanchuxiaoxi')}")){
+        var url = "{:U('Article/delete_cate')}";
+        $.getJSON(url,{id:id},function (data){
+          if(data.result == 'tp1'){$(".o"+id).remove();}
+          else if(data.result == 'tp2'){$(".o"+id).remove(); $(".p"+id).remove();}
+          else if(data.result == 'break'){alert('ERROR.');}
+        })
+      }
+    }
+    function is_status(id,t){
+      var url = "{:U('Article/is_status_cate')}";
+      $.getJSON(url,{id:id},function (data){
+        if(data.result == 'yes'){
+          $(t).find('img').attr('src',"__PUBLIC__/web/images/yes.png");
+        }else if(data.result == 'no'){
+          $(t).find('img').attr('src',"__PUBLIC__/web/images/no.png");
+        }
+      })
+    }
+  </script>
+</body>
+
+</html>

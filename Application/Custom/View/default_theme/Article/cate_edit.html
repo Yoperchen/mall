@@ -1,0 +1,93 @@
+<include file="Public/head" />
+
+<body>
+<div class="panel admin-panel margin-top">
+  <div class="panel-head" id="add"><strong><span class="icon-pencil-square-o"></span> {:L("tianjia")}/{:L("bianji")}</strong></div>
+  <div class="body-content">
+    <form method="post" class="form-x" action="" enctype="multipart/form-data">
+
+      <div class="form-group">
+        <div class="label">
+          <label>{:L("sahngjifenlei")}：</label>
+        </div>
+        <div class="field">
+          <select class="input w50" name="p_id">
+            <option value="0">{:L("qingxuanze")}</option>
+            <foreach name="cate_list_result.data.list" item="v">
+              <option value="{$v['id']}" <if condition="$cate_info_result['p_id'] == $v['id']">selected="selected"</if> >{$v['name']}</option>
+            </foreach>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="label">
+          <label>{:L("fenleibiaoti")}：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" name="name" value="{$cate_info_result.data.name}" data-validate="required:{:L('qingshuru')}{:L('fenleibiaoti')}"/>
+          <div class="tips"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="label">
+          <label>{:L("suolvetu")}：</label>
+        </div>
+        <div class="field">
+        <a class="button input-file" href="javascript:void(0);">+ 浏览文件<input onchange="preview(this)" name="thumb" size="100" type="file" /></a>
+          <div id="preview" name="img" style="width: 10%;box-sizing: border-box;" class="input" >
+            <empty name="cate_info_result.data.thumb">
+              <img src="__PUBLIC__/images/zanwu.jpg" width="100%" />
+              <else />
+              <img src="__ROOT__/{$cate_info_result.data.thumb}" width="100%" />
+            </empty>
+          </div>
+          <div class="tipss">{:L("tuijianchicun")}：100*100</div>
+        </div>
+      </div>
+      <div class="tipss"></div>
+
+      <div class="form-group">
+        <div class="label">
+          <label>{:L("paixu")}：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" name="sort" value="{$cate_info_result.data.sort}"  data-validate="number:{:L('hefapaixu')}" />
+          <div class="tipss">（{:L("xinwenpaixu")}）</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="label">
+          <label></label>
+        </div>
+        <div class="field">
+          <button class="button bg-main icon-check-square-o" type="submit"> {:L("tijiao")}</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
+</body>
+<script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
+<script type="text/javascript">
+  function preview(file)
+  {
+    var prevDiv = document.getElementById('preview');
+    if (file.files && file.files[0])
+    {
+      var reader = new FileReader();
+      reader.onload = function(evt){
+        prevDiv.innerHTML = '<img src="' + evt.target.result + '" width="100%" />';
+      }
+      reader.readAsDataURL(file.files[0]);
+    }
+    else
+    {
+      prevDiv.innerHTML = '<div class="img" style="filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.value + '\'"></div>';
+    }
+  }
+</script>
+</html>

@@ -1,0 +1,87 @@
+<include file="Public/head" />
+<script type="text/javascript" language="javascript" src="__PUBLIC__/admin/js/eye-base.js"></script>
+<script type="text/javascript" language="javascript" src="__PUBLIC__/admin/js/eye-all.js"></script>
+<body>
+  <form action="" id="listform">
+    <div class="panel admin-panel">
+      <div class="panel-head"><strong class="icon-reorder"> {:L("article_management")}</strong></div>
+      <div class="padding border-bottom">
+        <ul class="search" style="padding-left:10px;">
+          <li> <a class="button border-main icon-plus-square-o" href="{:U('Article/article_edit')}"> {:L("tianjia")}</a> </li>
+          <li>{:L("sousuo")}：</li>
+          <li>
+            <input type="text" placeholder="{:L('qingshuru')}{:L('title')}" name="title" value="{$get['title']}" class="input" style="width:250px; line-height:17px;display:inline-block" />
+          </li>
+          <li>{:L('article_status')}:</li>
+          <li>
+            <select name="status" class="input">
+            <option value="" <if condition="(I('request.status') eq '')">selected</if> >全部</option>
+            <option value="0" <if condition="(I('request.status') eq '0')">selected</if> >前台不显示</option>
+            <option value="1" <if condition="(I('request.status') eq 1)">selected</if> >显示</option>
+            </select>
+          </li>
+          <li>{:L("add_time")}：</li><li><input class="input" type="text" name="start_time" value="{:I('get.start_time')}" onClick="eye.datePicker.show(this);" /></li>
+          <li>~</li><li><input class="input" type="text" name="end_time" value="{:I('get.end_time')}" onClick="eye.datePicker.show(this);" /></li>
+          <li><input type="submit" value="{:L('sousuo')}" class="button border-main icon-search"/></li>
+        </ul>
+      </div>
+      <table class="table table-hover text-center">
+        <tr>
+          <th width="100">{:L("title")}</th>
+          <th width="500">{:L("description")}</th>
+          <th>{:L("article_status")}</th>
+          <!--  <th>{:L("tianjiashijian")}</th>-->
+          <th>{:L("link")}</th>
+          <th>{:L("caozuo")}</th>
+        </tr>
+        <foreach name="article_list_result.data.list" item="v">
+          <tr class="tr{$v['id']}">
+          <td><a title="{:L("view_his_comments")}" href="{:U('/Custom/comment/comment_list',['type'=>'ARTICLE','target_id'=>$v['id']])}"><img height="50" src="{$v.avatarurl}">{$v.title}</a></td>
+            <td>{$v['description']}</td>
+            <td>
+              <span style="color: blue;text-decoration:underline;" title="前台是否显示" onclick="is_status({$v['id']},this)">
+              <if condition="$v['status'] == 1">
+              <img src="__PUBLIC__/web/images/yes.png" width="18px;" alt="">
+              <elseif condition="$v['status'] == 0" />
+              <img src="__PUBLIC__/web/images/no.png" width="18px;" alt="">
+              </if>
+              </span>
+            </td>
+            <td>https://format.weiyuekj.com/front/article_detail.html?c_id={:session('c_id')}&id={$v.id}</td>
+            <!-- <td>{$v['add_time']|date="Y-m-d H:i",###}</td> -->
+            <td>
+            <a class="button border-main" href="{:U('Article/article_edit',['id'=>$v['id']])}"><span class="icon-edit"></span> {:L("xiangqing")}</a>
+            <a class="button border-red" href="javascript:void(0)" onclick="return del({$v['id']})"><span class="icon-trash-o"></span> 删除</a>
+            </td>
+          </tr>
+        </foreach>
+        <tr>
+          <td colspan="10"><div class="pagelist">{$article_list_result.data.page.page_str}</div></td>
+        </tr>
+      </table>
+    </div>
+  </form>
+  <script>
+  function del(id){
+  if(confirm("{:L('shanchuxiaoxi')}")){
+    var url = "{:U('article/delete')}";
+    $.getJSON(url,{id:id},function (result){
+      if(result.status == '1'){$(".tr"+id).remove();}
+      else if(result.status == '0'){alert('ERROR.');}
+    })
+  }
+}
+  function is_status(id,t){
+	  var url = "{:U('Article/is_status')}";
+	  $.getJSON(url,{id:id},function (data){
+	    if(data.status == '1'){
+	      $(t).find('img').attr('src',"__PUBLIC__/web/images/yes.png");
+	    }else if(data.status == '0'){
+	      $(t).find('img').attr('src',"__PUBLIC__/web/images/no.png");
+	    }
+	  })
+	}
+  </script>
+</body>
+
+</html>

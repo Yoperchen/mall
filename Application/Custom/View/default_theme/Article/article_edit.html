@@ -1,0 +1,147 @@
+<include file="Public/head" />
+<script type="text/javascript" src="__PUBLIC__/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="__PUBLIC__/ueditor/1.4.3/ueditor.all.min.js"> </script>
+<script>
+$(function(){
+	UE.getEditor('myEditor')
+})
+</script>
+<body>
+  <div class="panel admin-panel margin-top">
+    <div class="panel-head" id="add"><strong><span class="icon-pencil-square-o"></span> {:L("bianji")}</strong></div>
+    <div class="body-content">
+      <form method="post" class="form-x" action="" enctype="multipart/form-data">
+        <div class="form-group">
+          <div class="label">
+            <label>{:L("title")}:</label>
+          </div>
+          <div class="field">
+            <input type="text" class="input" name="title" value="{$article_info_result.data.title}" data-validate="required:必填" placeholder="{:L('title')}" />
+            <div class="tips"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="label">
+            <label>{:L("author")}:</label>
+          </div>
+          <div class="field">
+            <input type="text" class="input" name="author" value="{$article_info_result.data.author}" placeholder="{:L('author')}" />
+            <div class="tips"></div>
+          </div>
+        </div><!-- 
+        <div class="form-group">
+          <div class="label">
+            <label>{:L("from_url")}:</label>
+          </div>
+          <div class="field">
+            <input type="url" class="input" name="from_url" value="{$article_info_result.data.from_url}" placeholder="{:L('from_url')}" />
+            <div class="tips"></div>
+          </div>
+        </div> -->
+        <div class="form-group">
+          <div class="label">
+            <label>{:L("category")}:</label>
+          </div>
+          <div class="field">
+            <select class="input" class="" name="cate_id">
+            <option value="">选择分类</option>
+            <foreach name="cate_list_result.data.list" item="v">
+            <option value="{$v.id}">{$v.name}</option>
+            </foreach>
+            </select>
+            <div class="tips"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="label">
+            <label>{:L("thumb")}:</label>
+          </div>
+          <div class="field">
+            <a class="button input-file" href="javascript:void(0);">+ 浏览文件<input onchange="preview(this)" name="article_img" size="100" type="file" /></a>
+            <div id="preview" style="width:80px;">
+            <empty name="article_info_result['data']['article_img']">
+                <img class="img-responsive" src="__PUBLIC__/images/zanwu.jpg" width="100%" />
+                <else />
+                <img class="img-responsive" height="128" src="/{$article_info_result.data.article_img}" width="100%" />
+              </empty>
+              </div>
+            <div class="tips"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="label">
+            <label>{:L("description")}:</label>
+          </div>
+          <div class="field">
+            <textarea rows="5" class="input" name="description" placeholder="{:L('description')}">{$article_info_result.data.description}</textarea>
+            <div class="tips"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="label">
+            <label>{:L("content")}:</label>
+          </div>
+          <div class="field">
+            <textarea style="height:350px;" id="myEditor" name="content" placeholder="{:L('content')}">{$article_info_result.data.content}</textarea>
+            <div class="tips"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="label">
+            <label>{:L("article_status")}:</label>
+          </div>
+          <div class="field">
+            <select name="status" class="input w50">
+            <option <if condition="$article_info_result['data']['status']=='0'">selected</if> value="0">不显示</option>
+            <option <if condition="$article_info_result['data']['status']=='1'">selected</if> value="1">前台显示</option>
+            </select>
+            <div class="tips"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="label">
+            <label>{:L("sort")}:</label>
+          </div>
+          <div class="field">
+            <input type="number" class="input w50" name="sort" value="{$article_info_result.data.sort}" placeholder="{:L('sort')}" />
+            <div class="tips"></div>
+          </div>
+        </div>
+        <!-- <div class="form-group">
+          <div class="label">
+            <label>{:L("tianjiashijian")}：</label>
+          </div>
+          <div class="field">
+            {$article_info_result.data.add_time|date="Y-m-d H:i",###}
+            <div class="tips"></div>
+          </div>
+        </div> -->
+        <div class="form-group">
+          <div class="label">
+            <label></label>
+          </div>
+          <div class="field">
+            <button class="button bg-main icon-check-square-o" type="submit"> {:L("tijiao")}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script type="text/javascript">
+    function preview(file){
+      var prevDiv = document.getElementById('preview');
+      if (file.files && file.files[0]){
+        var reader = new FileReader();
+        reader.onload = function(evt){
+          prevDiv.innerHTML = '<img src="' + evt.target.result + '"class="img-responsive" />';
+        }
+        reader.readAsDataURL(file.files[0]);
+      }
+      else{
+        prevDiv.innerHTML = '<div class="img-responsive" style="filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.value + '\'"></div>';
+      }
+    }
+  </script>
+</body>
+
+</html>
